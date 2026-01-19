@@ -6,6 +6,38 @@
     <title>تطبيق عصمت الإسلامي - المكتبة الكاملة</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
+        .app-logo{
+    width:120px;
+    max-width:40%;
+    margin: 0 auto 10px;
+    display:block;
+
+    /* توهج متعدد الألوان */
+    animation: rainbowGlow 4s infinite linear;
+}
+
+@keyframes rainbowGlow {
+    0% {
+        filter: drop-shadow(0 0 8px red)
+                drop-shadow(0 0 15px orange);
+    }
+    25% {
+        filter: drop-shadow(0 0 8px yellow)
+                drop-shadow(0 0 15px green);
+    }
+    50% {
+        filter: drop-shadow(0 0 8px cyan)
+                drop-shadow(0 0 15px blue);
+    }
+    75% {
+        filter: drop-shadow(0 0 8px purple)
+                drop-shadow(0 0 15px magenta);
+    }
+    100% {
+        filter: drop-shadow(0 0 8px red)
+                drop-shadow(0 0 15px orange);
+    }
+}
         :root {
             --primary-dark: #1b4332;
             --primary-light: #2d6a4f;
@@ -83,6 +115,7 @@
 <body>
 
 <header>
+    <img src="logo.png" alt="شعار تطبيق عصمت الإسلامي" class="app-logo">
     <h1>تطبيق عصمت الإسلامي</h1>
     <div id="location-name">عدن، اليمن</div>
     <div id="date-display">جاري التحميل...</div>
@@ -253,3 +286,4 @@
 </script>
 </body>
 </html>
+
