@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق عصمت الإسلامي - المكتبة الكاملة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1b4332;
+            --primary-light: #2d6a4f;
+            --accent: #d4a373;
+            --bg: #f0f2f1;
+            --red-glow: #ff0000;
+        }
+
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 100px; color: #333; overflow-x: hidden; }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            color: white; padding: 20px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .digital-clock-container {
+            background: #000; padding: 15px; margin: 20px auto; width: 90%; max-width: 400px; border-radius: 15px;
+            text-align: center; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); border: 2px solid #333;
+        }
+
+        #clock { font-family: 'Orbitron', sans-serif; color: var(--red-glow); font-size: 35px; text-shadow: 0 0 15px var(--red-glow); }
+
+        .container { max-width: 900px; margin: auto; padding: 0 15px; }
+
+        .search-box {
+            background: white; padding: 15px; border-radius: 15px; margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; gap: 10px;
+        }
+        .search-box input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Tajawal'; font-size: 14px; }
+        .search-box button { background: var(--primary-light); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
+
+        .prayer-times {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;
+            background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .prayer-card { text-align: center; padding: 10px; background: #f9fdfb; border-radius: 10px; border: 1px solid #e0e0e0; cursor: pointer; transition: 0.2s; }
+        .prayer-card:active { transform: scale(0.95); background: #e8f5e9; }
+        .prayer-card span { display: block; font-size: 12px; color: #777; }
+        .prayer-card strong { color: var(--primary-dark); font-size: 16px; }
+
+        .main-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .nav-card {
+            background: white; padding: 15px 5px; border-radius: 15px; text-align: center; cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05); font-weight: bold; color: var(--primary-dark); font-size: 13px;
+        }
+
+        .section { display: none; background: white; padding: 20px; border-radius: 15px; min-height: 400px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .active-section { display: block; }
+
+        .hadith-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; 
+            text-align: center; 
+        }
+        .book-item { cursor: pointer; transition: 0.3s; text-decoration: none; color: inherit; }
+        .book-item img { width: 100%; height: 110px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); object-fit: cover; }
+        .book-item span { display: block; font-size: 11px; margin-top: 5px; font-weight: bold; }
+
+        /* نافذة القراءة المحسنة للهاتف */
+        #reader-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; }
+        .modal-content { position: relative; width: 100%; height: 100%; background: white; overflow-y: auto; display: flex; flex-direction: column; }
+        .modal-header { background: var(--primary-dark); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        
+        #quran-text { padding: 25px; font-family: 'Amiri', serif; font-size: 24px; line-height: 2.2; text-align: center; direction: rtl; white-space: pre-wrap; }
+        .audio-player { background: #f1f1f1; padding: 15px; position: sticky; bottom: 0; width: 100%; box-sizing: border-box; border-top: 2px solid var(--primary-light); }
+        audio { width: 100%; }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        footer { position: fixed; bottom: 0; width: 100%; background: var(--primary-dark); color: white; text-align: center; padding: 15px 0; font-size: 14px; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>تطبيق عصمت الإسلامي</h1>
+    <div id="location-name">عدن، اليمن</div>
+    <div id="date-display">جاري التحميل...</div>
+</header>
+
+<div class="digital-clock-container">
+    <span style="color:red; font-size:12px;">عصمت الحميدي</span>
+    <div id="clock">00:00:00</div>
+</div>
+
+<div class="container">
+    <div class="search-box">
+        <input type="text" id="city-input" placeholder="اكتب اسم المدينة (مثلاً: مكة)...">
+        <button onclick="searchCity()">بحث</button>
+    </div>
+
+    <div class="prayer-times" id="prayer-times">
+        <div class="prayer-card"><span>الفجر</span><strong id="Fajr">--:--</strong></div>
+        <div class="prayer-card"><span>الشروق</span><strong id="Sunrise">--:--</strong></div>
+        <div class="prayer-card"><span>الظهر</span><strong id="Dhuhr">--:--</strong></div>
+        <div class="prayer-card"><span>العصر</span><strong id="Asr">--:--</strong></div>
+        <div class="prayer-card"><span>المغرب</span><strong id="Maghrib">--:--</strong></div>
+        <div class="prayer-card"><span>العشاء</span><strong id="Isha">--:--</strong></div>
+    </div>
+
+    <div class="main-nav">
+        <div class="nav-card" onclick="showSection('quran')">📖 القرآن</div>
+        <div class="nav-card" onclick="showSection('adhkar')">📿 الأذكار</div>
+        <div class="nav-card" onclick="showSection('hadith')">📚 الحديث</div>
+    </div>
+
+    <div id="hadith" class="section">
+        <h3 style="text-align: center; color: var(--primary-dark);">مكتبة الحديث الشريف</h3>
+        <div class="hadith-grid">
+            <div class="book-item" onclick="openBook('bukhari')"><img src="https://res.al-hiwar.com/resource/hadith/cover/94.png"><span>صحيح البخاري</span></div>
+            <div class="book-item" onclick="openBook('muslim')"><img src="https://res.al-hiwar.com/resource/hadith/cover/96.png"><span>صحيح مسلم</span></div>
+            <div class="book-item" onclick="openBook('nasai')"><img src="https://res.al-hiwar.com/resource/hadith/cover/98.png"><span>سنن النسائي</span></div>
+            <div class="book-item" onclick="openBook('abudawud')"><img src="https://res.al-hiwar.com/resource/hadith/cover/100.png"><span>سنن أبي داود</span></div>
+            <div class="book-item" onclick="openBook('tirmidhi')"><img src="https://res.al-hiwar.com/resource/hadith/cover/102.png"><span>جامع الترمذي</span></div>
+            <div class="book-item" onclick="openBook('ibnmajah')"><img src="https://res.al-hiwar.com/resource/hadith/cover/104.png"><span>سنن ابن ماجه</span></div>
+        </div>
+    </div>
+
+    <div id="quran" class="section active-section">
+        <h3 style="text-align: center; color: var(--primary-dark);">القرآن الكريم</h3>
+        <div id="surah-grid" class="hadith-grid">
+            </div>
+    </div>
+
+    <div id="adhkar" class="section">
+        <h3 style="text-align: center;">الأذكار اليومية</h3>
+        <div id="adhkar-list">
+            <div class="prayer-card" style="margin-bottom:10px; text-align:right; font-size: 18px; line-height: 1.6;">أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ...</div>
+            <div class="prayer-card" style="margin-bottom:10px; text-align:right; font-size: 18px; line-height: 1.6;">آية الكرسي: اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...</div>
+        </div>
+    </div>
+</div>
+
+<div id="reader-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="modal-title-text">تطبيق عصمت</span>
+            <button onclick="closeModal()" style="background:#ff4444; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold;">إغلاق ✖</button>
+        </div>
+        
+        <div id="quran-viewer" style="display:none; flex:1; overflow-y:auto;">
+            <div id="quran-text">جاري تحميل السورة...</div>
+            <div class="audio-player">
+                <p style="text-align:center; margin-bottom:5px; font-weight:bold; color:var(--primary-dark)">استماع بصوت مشاري العفاسي</p>
+                <audio id="quran-audio" controls src=""></audio>
+            </div>
+        </div>
+
+        <iframe id="hadith-frame" style="display:none;" src=""></iframe>
+    </div>
+</div>
+
+<footer>تصميم عصمت الحميدي 2026</footer>
+
+<script>
+    // الساعة
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
+
+    // مواقيت الصلاة
+    async function getPrayerTimes(city) {
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/timingsByAddress?address=${city}&method=4`);
+            const data = await res.json();
+            if(data.code === 200) {
+                const t = data.data.timings;
+                ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].forEach(p => document.getElementById(p).innerText = t[p]);
+                document.getElementById('location-name').innerText = city;
+                document.getElementById('date-display').innerText = data.data.date.hijri.day + " " + data.data.date.hijri.month.ar + " " + data.data.date.hijri.year + " هـ";
+            }
+        } catch (e) { console.error("Error fetching times"); }
+    }
+    getPrayerTimes('Aden, Yemen');
+
+    function searchCity() {
+        const city = document.getElementById('city-input').value;
+        if(city) getPrayerTimes(city);
+    }
+
+    // التنقل بين الأقسام
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    // تحميل السور
+    async function loadSurahs() {
+        const res = await fetch('https://api.alquran.cloud/v1/surah');
+        const data = await res.json();
+        const grid = document.getElementById('surah-grid');
+        data.data.forEach(s => {
+            const d = document.createElement('div');
+            d.className = 'prayer-card';
+            d.innerHTML = `<strong>${s.number}</strong><span>${s.name}</span>`;
+            d.onclick = () => openSurah(s.number, s.name);
+            grid.appendChild(d);
+        });
+    }
+    loadSurahs();
+
+    // فتح السورة للقراءة والاستماع
+    async function openSurah(number, name) {
+        document.getElementById('reader-modal').style.display = "block";
+        document.getElementById('quran-viewer').style.display = "flex";
+        document.getElementById('hadith-frame').style.display = "none";
+        document.getElementById('modal-title-text').innerText = "سورة " + name;
+        document.getElementById('quran-text').innerText = "جاري التحميل...";
+        document.body.style.overflow = "hidden";
+
+        // جلب النص
+        try {
+            const res = await fetch(`https://api.alquran.cloud/v1/surah/${number}/ar.alafasy`);
+            const data = await res.json();
+            let fullText = "";
+            data.data.ayahs.forEach(ayah => {
+                fullText += ayah.text + ` (${ayah.numberInSurah}) `;
+            });
+            document.getElementById('quran-text').innerText = fullText;
+            
+            // رابط الصوت (مشاري العفاسي كمثال)
+            const audioNum = number.toString().padStart(3, '0');
+            document.getElementById('quran-audio').src = `https://server8.mp3quran.net/afs/${audioNum}.mp3`;
+        } catch (e) {
+            document.getElementById('quran-text').innerText = "عذراً، حدث خطأ في تحميل السورة.";
+        }
+    }
+
+    // فتح كتب الحديث
+    function openBook(slug) {
+        document.getElementById('reader-modal').style.display = "block";
+        document.getElementById('hadith-frame').style.display = "block";
+        document.getElementById('quran-viewer').style.display = "none";
+        document.getElementById('hadith-frame').src = "https://sunnah.com/" + slug;
+        document.getElementById('modal-title-text').innerText = "مكتبة الحديث";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        document.getElementById('reader-modal').style.display = "none";
+        document.getElementById('hadith-frame').src = "";
+        document.getElementById('quran-audio').pause();
+        document.body.style.overflow = "auto";
+    }
+</script>
+</body>
+</html>
